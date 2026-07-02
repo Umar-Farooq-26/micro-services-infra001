@@ -138,3 +138,4 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -auto-approve -input=false -var-file=terraform.tfvars
         working-directory: ${{ env.TF_WORKING_DIR }}
+        
