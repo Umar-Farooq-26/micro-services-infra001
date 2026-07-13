@@ -9,7 +9,7 @@ infra_config = {
     "acrmicrodev556677" = {
       rg_key = "rg-micro-dev"
       sku    = "Basic"
-    }
+    } 
   }
   kubernetes_clusters = {
     "aks-micro-dev" = {
