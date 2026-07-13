@@ -6,7 +6,7 @@ infra_config = {
     }
   }
   container_registries = {
-    "acrmicrodev567" = {
+    "acrmicrodev556677" = {
       rg_key = "rg-micro-dev"
       sku    = "Basic"
     }
