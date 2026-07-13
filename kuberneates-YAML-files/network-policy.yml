@@ -7,7 +7,7 @@ spec:
   podSelector:
     matchLabels:
       app: nginx
+    
   ingress:
-    - ports:
-        - protocol: TCP
-          port: 80
+  - ports:
+    - port: 80
