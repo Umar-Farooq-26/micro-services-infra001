@@ -5,7 +5,6 @@ infra_config = {
       tags     = { Environment = "Dev", ManagedBy = "Terraform" }
     }
   }
-  
   container_registries = {
     "acrmicrodev556677" = {
       rg_key = "rg-micro-dev"
