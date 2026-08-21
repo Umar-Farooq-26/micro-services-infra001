@@ -1,0 +1,25 @@
+apiVersion: v1              # Which version of the Kubernetes API schema this object follows.   # "v1" is the stable "core" API group — Services live here (unlike
+                             # Deployments, which are in "apps/v1").
+
+kind: Service                # The type of Kubernetes object being defined. A Service is a stable  # network endpoint that routes traffic to a set of Pods, so clients
+                              # don't need to track individual Pod IPs (which change as Pods die   # and get recreated).
+
+metadata:                    # Object-identifying info, as opposed to the object's desired behavior
+                              # (which goes under `spec`).
+  name: myapp-service         # The name this Service is registered under in the cluster. Other    # objects/DNS refer to it as `myapp-service` (and, within the same
+                               # namespace, just that name resolves via internal DNS).
+
+spec:                        # The desired state / configuration of the Service.
+
+  type: LoadBalancer          # How this Service is exposed. LoadBalancer asks the cloud provider  # (AWS/GCP/Azure/etc.) to provision an external load balancer with a
+                               # public IP that forwards traffic into the cluster. (Other options:   # ClusterIP — internal only, the default; NodePort — exposes a port
+                               # on every node's IP; ExternalName — DNS alias, no proxying.)
+
+  selector:                   # Determines WHICH Pods this Service sends traffic to: any Pod whose  # labels match every key/value pair listed here becomes a backend.
+    brand: gucci                # Only Pods labeled `brand: gucci` in their metadata.labels will be  # selected as endpoints for this Service. (This label has no special
+                                 # Kubernetes meaning — it's an arbitrary key/value the cluster admin  # chose, matched against whatever labels the target Pods carry.)
+
+  ports:                      # List of port mappings this Service exposes (a Service can expose # multiple ports at once; here there's just one).
+  - port: 11111                  # The port the Service itself listens on — i.e. what clients/the   # load balancer connect to (e.g. http://<external-ip>:11111).
+    targetPort: 80                # The port on the SELECTED PODS that traffic gets forwarded to.  # So a request to the Service on :11111 is proxied to :80 inside
+                                   # whichever Pod handles it (commonly the container's actual  # listening port, e.g. a web server on port 80).

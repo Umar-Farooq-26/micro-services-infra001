@@ -1,0 +1,34 @@
+apiVersion: apps/v1              # API group/version this object belongs to. Deployments live in # "apps/v1" (unlike Services, which are in the core "v1" group).
+
+kind: Deployment                  # The type of object: a Deployment manages a set of identical Pods  # (via an underlying ReplicaSet), handling creation, scaling, and
+                                   # rolling updates so you don't manage individual Pods by hand.
+
+metadata:                         # Object-identifying info, separate from its desired behavior. name: nginx-deploy                # The name this Deployment is registered under in the cluster.
+spec:                             # The desired state of the Deployment.
+
+  replicas: 4                       # How many identical Pod copies should be running at all times.  # The Deployment controller continuously works to keep exactly
+                                     # 4 matching Pods alive, recreating any that crash or are deleted.
+
+  selector:                         # Tells the Deployment which Pods it "owns" and must manage —  # it does this by matching Pod labels, not by name or identity.
+    matchLabels:                      # The set of label key/value pairs a Pod must have to be # considered part of this Deployment.
+      brand: gucci                      # Only Pods labeled `brand: gucci` are counted/managed by  # this Deployment. This MUST match the labels set in
+                                         # template.metadata.labels below, or Kubernetes will reject  # the Deployment as invalid.
+
+  template:                         # The Pod "blueprint" — this exact spec is stamped out 4 times  # (per `replicas`) to create the actual Pods.
+    metadata:                         # Metadata applied to each Pod created from this template.  labels:        # Labels attached to every Pod this Deployment creates.
+        brand: gucci                      # Must match `selector.matchLabels` above — this is what  # makes the Deployment recognize these Pods as its own.
+                                           # (It's also what a Service's `selector` would match  # against, e.g. the `brand: gucci` selector from the
+                                           # previous Service manifest — these Pods are exactly # what that Service would route traffic to.)
+
+    spec:                             # The actual Pod spec — what runs inside each of the 4 Pods. containers:   # List of containers to run in each Pod (a Pod can have
+                                         # multiple containers; here there's just one). - name: nginx-deploy-container       # The name of this container within the Pod, used for
+                                            # things like logs (`kubectl logs <pod> -c <name>`) and  # referencing it elsewhere (e.g. in probes or env refs).
+
+        image: nginx:latest                 # The container image to run, pulled from a registry   # (Docker Hub by default). `:latest` means "whatever the
+                                             # most recently pushed tag is" — fine for a demo, but # risky in production since it's not reproducible/pinned
+                                             # and can silently change what gets deployed on restart.
+
+        ports:                               # Declares which ports the container listens on. This is # informational/documentation for Kubernetes and other
+                                              # tooling — it does NOT actually open the port; nginx  # itself opens port 80 regardless of whether it's listed # here.
+        - containerPort: 80                     # The port nginx listens on inside the container. This # is the port a Service's `targetPort` would need to
+                                                 # point at to route traffic into these Pods.

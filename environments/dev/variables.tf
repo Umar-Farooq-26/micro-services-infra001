@@ -23,3 +23,4 @@ variable "infra_config" {
     }))
   })
 }
+
